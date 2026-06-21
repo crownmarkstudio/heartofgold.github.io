@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Heart of Gold Foundation</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root {
+    --primary: #0b7a3b;
+    --primary-dark: #075227;
+    --primary-light: #e6f4ea;
+    --secondary: #1d2d44;
+    --text: #2b2d42;
+    --bg: #f8f9fa;
+    --white: #ffffff;
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;padding-top:120px}
+
+/* Top Info Bar */
+.top-bar {
+    background: var(--secondary);
+    color: var(--white);
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1050;
+    height: 40px;
+}
+.top-info { display: flex; gap: 20px; }
+.top-info a { color: rgba(255,255,255,0.9); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
+.top-info a:hover { color: var(--primary); }
+.top-social a { color: var(--white); margin-left: 15px; font-size: 1rem; transition: var(--transition); }
+.top-social a:hover { color: var(--primary); transform: translateY(-2px); display: inline-block; }
+
+/* Sticky Navigation */
+header {
+    position: fixed;
+    top: 40px;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+    transition: var(--transition);
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1300px;
+    margin: auto;
+    padding: 0 20px;
+}
+.nav-logo { font-weight: 700; color: var(--primary); font-size: 1.4rem; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.nav-links { display: flex; gap: 5px; align-items: center; }
+nav a.nav-item { color: var(--secondary); text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 30px; transition: var(--transition); }
+nav a.nav-item:hover { color: var(--primary); background: var(--primary-light); }
+nav a.nav-btn { background: var(--primary); color: var(--white) !important; padding: 10px 22px; border-radius: 30px; font-weight: 600; box-shadow: 0 4px 15px rgba(11,122,59,0.2); }
+nav a.nav-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+/* Mobile Menu Toggle Styling */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1010;
+}
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--secondary);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+/* Hero Section & Improved Background Slideshow */
+.hero { height: calc(100vh - 120px); min-height: 550px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: var(--secondary); }
+.slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transform: scale(1.08); animation: fadeScale 18s infinite cubic-bezier(0.25, 1, 0.5, 1); z-index: 1; will-change: opacity, transform; }
+
+/* Animation sequence timing configured for seamless transitions starting instantly */
+.slide:nth-child(1) { background-image: url('images/hero-slide1.jpg'); animation-name: fadeScaleFirst; animation-delay: 0s; z-index: 2; }
+.slide:nth-child(2) { background-image: url('images/hero-slide2.jpg'); animation-delay: 6s; }
+.slide:nth-child(3) { background-image: url('images/hero-slide3.jpg'); animation-delay: 12s; }
+
+/* Custom keyframes for the first slide to eliminate startup blank flashes */
+@keyframes fadeScaleFirst {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    28% { opacity: 1; transform: scale(1.03); }
+    33% { opacity: 0; transform: scale(1.05); }
+    95% { opacity: 0; transform: scale(1.08); }
+}
+/* Keyframes for subsequent looping slides */
+@keyframes fadeScale {
+    0% { opacity: 0; transform: scale(1.08); }
+    5% { opacity: 1; transform: scale(1.05); }
+    33% { opacity: 1; transform: scale(1); }
+    38%, 100% { opacity: 0; transform: scale(1.02); }
+}
+
+.overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7)); z-index: 3; }
+
+.hero-corner-brand {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    z-index: 10;
+    width: 90px;
+    height: 90px;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-corner-brand img { width: 100%; height: 100%; object-fit: contain; }
+.hero-corner-brand i { font-size: 2.5rem; color: var(--primary); }
+
+.hero-content { position: relative; text-align: center; color: #fff; width: 95%; max-width: 850px; z-index: 4; opacity: 0; transform: translateY(20px); animation: fadeInUp 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+.logo-center { width: 110px; height: 110px; border-radius: 50%; background: var(--white); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 50px; margin: 0 auto 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: heartbeat 2s infinite alternate; }
+@keyframes heartbeat { 0% { transform: scale(1); } 10% { transform: scale(1.04); } 20% { transform: scale(1); } }
+.hero h1 { font-size: 3.5rem; margin-bottom: 15px; font-weight: 800; letter-spacing: -1px; text-shadow: 0 2px 15px rgba(0,0,0,0.4); line-height: 1.2; }
+.hero p { font-size: 1.35rem; margin-bottom: 35px; color: rgba(255,255,255,0.95); font-weight: 400; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+/* Scroll Animation Elements */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* Layout & General Section Rules */
+section { padding: 80px 20px; max-width: 1300px; margin: auto; }
+h2.section-title { text-align: center; color: var(--secondary); margin-bottom: 60px; font-size: 2.3rem; position: relative; font-weight: 700 }
+h2.section-title::after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: var(--primary); border-radius: 2px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.card { background: var(--white); padding: 35px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); transition: var(--transition); border: 1px solid rgba(0,0,0,0.03); }
+
+/* Split Layout Modules */
+.split-layout { display: flex; align-items: center; gap: 50px; }
+.split-text { flex: 1.2; }
+.split-image { flex: 0.8; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.08); height: 420px; background: #e2e8f0; position: relative; }
+.split-image img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Blockquote Statement Box Stylings */
+.founder-statement { margin-top: 25px; padding: 30px; background: var(--primary-light); border-left: 5px solid var(--primary); border-radius: 0 20px 20px 0; font-style: italic; position: relative; }
+.founder-statement::before { content: '"'; font-size: 5rem; color: rgba(11, 122, 59, 0.12); position: absolute; top: -10px; left: 15px; font-family: Georgia, serif; }
+.founder-statement p { position: relative; z-index: 2; color: var(--secondary); font-size: 1.05rem; font-weight: 500; }
+.founder-signature { margin-top: 15px; text-align: right; font-weight: bold; font-style: normal; font-size: 0.95rem; color: var(--primary); }
+
+/* Custom Stories Slideshow System */
+.stories-slider-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+    background: var(--white);
+}
+.stories-wrapper {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+}
+.story-slide {
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    background: var(--white);
+}
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    align-items: center;
+}
+.story-image-side {
+    height: 450px;
+    overflow: hidden;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.story-image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.story-text-side {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.story-tag {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 4px 14px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.story-text-side h3 {
+    font-size: 1.8rem;
+    color: var(--secondary);
+    margin-bottom: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+.story-text-side p {
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+/* Slider Controls */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0,0,0,0.05);
+    color: var(--secondary);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: var(--transition);
+}
+.slider-btn:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+.slider-prev { left: 20px; }
+.slider-next { right: 20px; }
+
+.slider-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 25px;
+}
+.indicator-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.indicator-dot.active {
+    background: var(--primary);
+    width: 24px;
+    border-radius: 5px;
+}
+
+/* Programs Section Cards */
+.program-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.program-img-wrapper { width: 100%; height: 220px; overflow: hidden; background: #e2e8f0; }
+.program-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.program-body { padding: 25px; flex-grow: 1; }
+.program-body h3 { color: var(--secondary); margin-bottom: 10px; font-size: 1.25rem; }
+.program-body p { color: #555; font-size: 0.95rem; }
+
+/* Interactive Hidden Donate System */
+.donate-trigger-wrapper { text-align: center; margin-bottom: 20px; }
+.donate-container { max-height: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; opacity: 0; }
+.donate-container.open { max-height: 1000px; opacity: 1; margin-top: 40px; }
+.donate-card { background: var(--white); text-align: center; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
+.donate-card i { font-size: 2.3rem; color: var(--primary); margin-bottom: 15px; }
+
+/* Contact Section Details */
+.contact-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; text-align: center; }
+.contact-item { background: var(--white); padding: 35px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.01); border: 1px solid rgba(0,0,0,0.02); }
+.contact-item i { font-size: 1.8rem; color: var(--primary); margin-bottom: 15px; }
+.contact-item p { font-weight: 500; font-size: 1.05rem; color: var(--secondary); word-break: break-word; }
+
+/* Footer Design */
+footer { background: var(--secondary); color: var(--white); text-align: center; padding: 50px 20px; border-top: 4px solid var(--primary); }
+footer h3 { font-size: 1.6rem; margin-bottom: 10px; font-weight: 700; }
+footer p { color: rgba(255,255,255,0.7); font-weight: 300; font-size: 0.95rem; }
+
+/* Floating Elements */
+.whatsapp-float { position: fixed; bottom: 25px; right: 25px; background: #25D366; color: #fff; padding: 16px; border-radius: 50%; font-size: 26px; text-decoration: none; box-shadow: 0 4px 20px rgba(37,211,102,0.4); z-index: 998; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
+
+/* Fallback Icon styling for missing local image illustration */
+.missing-img-fallback { font-size: 4rem; color: #94a3b8; }
+
+/* --- RESPONSIVE MEDIA BREAKPOINTS --- */
+@media(max-width: 992px) {
+    body { padding-top: 80px; }
+    .top-bar { display: none; }
+    header { top: 0; height: 80px; }
+    .menu-toggle { display: flex; }
+    .nav-links {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: 40px 20px;
+        gap: 15px;
+        transition: var(--transition);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+        overflow-y: auto;
+    }
+    .nav-links.active { left: 0; }
+    nav a.nav-item { width: 100%; text-align: center; padding: 12px; font-size: 1.15rem; border-radius: 10px; }
+    nav a.nav-btn { width: 80%; text-align: center; margin-top: 10px; }
+    
+    .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 5px); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .split-layout { flex-direction: column; gap: 30px; }
+    .split-image { width: 100%; height: 320px; }
+    .hero h1 { font-size: 2.5rem; }
+    
+    .story-grid { grid-template-columns: 1fr; }
+    .story-image-side { height: 280px; }
+    .story-text-side { padding: 30px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="top-info">
+        <a href="tel:+260976452914"><i class="fas fa-phone"></i> +260976452914 / +26077296449</a>
+        <a href="mailto:theheartofgodfoundation@gmail.com"><i class="fas fa-envelope"></i> theheartofgoldfoundation@gmail.com</a>
+    </div>
+    <div class="top-social">
+        <a href="https://wa.me/260976452914" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="#contact"><i class="fas fa-map-marker-alt"></i></a>
+    </div>
+</div>
+
+<header id="main-header">
+    <nav>
+        <a href="#" class="nav-logo"><i class="fas fa-heart"></i> Heart of Gold Foundation</a>
+        <div class="menu-toggle" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links" id="nav-menu-container">
+            <a href='#about' class="nav-item" onclick="closeMobileMenu()">About</a>
+            <a href='#vision' class="nav-item" onclick="closeMobileMenu()">Vision</a>
+            <a href='#stories' class="nav-item" onclick="closeMobileMenu()">Our Stories</a>
+            <a href='#programs' class="nav-item" onclick="closeMobileMenu()">Programs</a>
+            <a href='#partner' class="nav-item" onclick="closeMobileMenu()">Partner</a>
+            <a href='#contact' class="nav-item" onclick="closeMobileMenu()">Contact</a>
+            <a href='#donate' class="nav-item nav-btn" onclick="closeMobileMenu()">Donate</a>
+        </div>
+    </nav>
+</header>
+
+<div class='hero'>
+    <div class="hero-corner-brand">
+        <img src="images/logo.png" alt="Logo" onerror="this.style.display='none'; document.getElementById('fallback-icon').style.display='block';">
+        <i class="fas fa-heart" id="fallback-icon" style="display: none;"></i>
+    </div>
+    <div class='slide'></div>
+    <div class='slide'></div>
+    <div class='slide'></div>
+    <div class='overlay'></div>
+    <div class='hero-content'>
+        <div class='logo-center'><i class='fas fa-heart'></i></div>
+        <h1>Heart of Gold Foundation</h1>
+        <p>Serving Humanity, Restoring Hope, Transforming Lives</p>
+        <a href='#about' class='btn' style="background:var(--primary); color:#fff; padding:12px 30px; text-decoration:none; border-radius:30px; font-weight:600; display:inline-block; margin-top:15px;">Learn More <i class="fas fa-arrow-right" style="margin-left:8px;"></i></a>
+    </div>
+</div>
+
+<section id='about' class="reveal">
+    <h2 class="section-title">About Us</h2>
+    <div class='split-layout'>
+        <div class='split-text card'>
+            <p style="margin-bottom: 15px; font-size: 1.1rem; color: #444;">The Heart of Gold Foundation is A humanitarian, charitable, philanthropic, empowerment, and social enterprise organization dedicated to transforming lives through compassion, empowerment, sustainable development, and community support.</p>
+            <p style="margin-bottom: 15px;">Founded on the belief that every human being deserves dignity, opportunity, hope, and a chance to thrive regardless of their circumstances.</p>
+            <p>Through partnerships, volunteerism, and community-driven projects, Heart of Gold Foundation works to make a lasting positive impact in society.</p>
+        </div>
+        <div class="split-image">
+            <img src="images/about-community.jpg" alt="Group portrait" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="missing-img-fallback" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;"><i class="fas fa-users"></i><p style="font-size:1rem; margin-top:10px;">About Image</p></div>
+        </div>
+    </div>
+</section>
+
+<section id='vision' class="reveal">
+    <h2 class="section-title">Vision & Mission</h2>
+    <div class='split-layout' style="margin-bottom: 40px;">
+        <div class='split-image' style="height: 380px;">
+            <img src="images/the-founder.jpg" alt="founder" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="missing-img-fallback" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;"><i class="fas fa-user-tie"></i><p style="font-size:1rem; margin-top:10px;">Founder Image</p></div>
+        </div>
+        <div class='split-text' style="display: flex; flex-direction: column; gap: 20px;">
+            <div class='card' style="padding: 25px; border-top: 5px solid var(--primary);">
+                <h3 style="font-size: 1.3rem; color: var(--secondary); margin-bottom: 8px;"><i class="fas fa-eye" style="color: var(--primary); margin-right: 10px;"></i> Vision</h3>
+                <p>To create a world where compassion transforms lives, communities thrive, and every person has access to hope, opportunity, dignity, and a better future.</p>
+            </div>
+            <div class='card' style="padding: 25px; border-top: 5px solid var(--primary);">
+                <h3 style="font-size: 1.3rem; color: var(--secondary); margin-bottom: 8px;"><i class="fas fa-bullseye" style="color: var(--primary); margin-right: 10px;"></i> Mission</h3>
+                <p>To identify and support vulnerable individuals and communities through humanitarian assistance, empowerment programs, skills development, education, entrepreneurship, and sustainable social enterprises.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Restored Statement from the Founder -->
+    <div class="founder-statement">
+        <p>Our foundation works tirelessly on the ground to map out critical areas where help is urgently required. Through structured assessments and community engagement, we build systems that don't just offer temporary relief, but long-term community growth.</p>
+        <div class="founder-signature">— Margaret Kambikambi 
+Founder/Executive Director</div>
+    </div>
+</section>
+
+<!-- Slideshow Section (Autoplay every 3 seconds) -->
+<section id='stories' class="reveal">
+    <h2 class="section-title">Our Stories</h2>
+    <div class="stories-slider-container">
+        <button class="slider-btn slider-prev" onclick="moveStoriesSlider(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-btn slider-next" onclick="moveStoriesSlider(1)"><i class="fas fa-chevron-right"></i></button>
+        
+        <div class="stories-wrapper" id="storiesWrapper">
+            <!-- Story 1 -->
+            <div class="story-slide">
+                <div class="story-grid">
+                    <div class="story-image-side">
+                        <img src="images/story-1.jpg" alt="Water Project" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="missing-img-fallback" style="display:none; flex-direction:column; align-items:center;"><i class="fas fa-faucet"></i></div>
+                    </div>
+                    <div class="story-text-side">
+                        <span class="story-tag">Helped Rebuild His Life.</span>
+                        <h3>Simon Mtonga</h3>
+                        <p>Simon Mtonga from Chongwe lost both of his legs and has struggled to earn a living. Despite this, he remains determined to succeed. With poultry farming experience and a poultry house already built, Simon is ready to start a chicken-rearing business but needs support to buy chicks, feed, and supplies.
+
+                            Your contribution can help him build a sustainable source of income and regain his independence.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Story 2 -->
+            <div class="story-slide">
+                <div class="story-grid">
+                    <div class="story-image-side">
+                        <img src="images/story-2.jpg" alt="Education support" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="missing-img-fallback" style="display:none; flex-direction:column; align-items:center;"><i class="fas fa-book-reader"></i></div>
+                    </div>
+                    <div class="story-text-side">
+                        <span class="story-tag">Help Restore Her Sight and Hope</span>
+                        <h3>Twapia Compound</h3>
+                        <p>A young girl from Twapia Compound, Ndola, is living with a serious eye condition, including glaucoma and cataract. She depends on medication and special lenses to manage pain, reduce pressure in her eyes, and prevent her condition from worsening.
+
+                            Her family is doing all they can, but the cost of ongoing treatment is a heavy burden. They need support to provide essential medicine, lenses, and continued medical care.
+
+                                Your contribution can help ease her pain, protect her remaining vision, and give her hope for a brighter future.
+
+                                Join the Heart of God Foundation in supporting this child and helping restore comfort, dignity, and hope.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Story 3 -->
+            <div class="story-slide">
+                <div class="story-grid">
+                    <div class="story-image-side">
+                        <img src="images/story-3.jpg" alt="Medical clinic" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="missing-img-fallback" style="display:none; flex-direction:column; align-items:center;"><i class="fas fa-clinic-medical"></i></div>
+                    </div>
+                    <div class="story-text-side">
+                        <span class="story-tag">Help Save Baby</span>
+                        <h3>Ephraim Chanda</h3>
+                        <p>At just 1 year old, Ephraim Chanda is battling Biliary Atresia and Liver Cirrhosis. He lives in constant pain, suffering from severe swelling, jaundice, and complications that threaten his life every day. There is hope. A liver donor has been found, and arrangements are underway for a life-saving liver transplant in India. While the medical costs, flights, and accommodation have been covered, the family still needs approximately K35,000 for visa fees and other urgent travel requirements.
+
+                        So far, K16,570 has been raised through generous donations, but more support is urgently needed.
+
+                            Every contribution, no matter the amount, brings Ephraim one step closer to the treatment that could save his life.
+
+                                Join the Heart of God Foundation in giving Ephraim a chance to live, grow, and enjoy the childhood every child deserves..</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Story 4 -->
+            <div class="story-slide">
+                <div class="story-grid">
+                    <div class="story-image-side">
+                        <img src="images/story-4.jpg" alt="Youth workspace" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="missing-img-fallback" style="display:none; flex-direction:column; align-items:center;"><i class="fas fa-lightbulb"></i></div>
+                    </div>
+                    <div class="story-text-side">
+                        <span class="story-tag">Help a Mother Save Her Son</span>
+                        <h3>From Lusaka</h3>
+                        <p>A devoted mother is fighting every day to help her special-needs son receive the medical care he urgently needs. Despite undergoing an operation in 2024, answers remain elusive, and his condition continues to worsen.
+
+                            With limited resources, she works tirelessly through small salaula trading, hoping to raise enough money for specialist consultations, diagnostic tests, transportation, and treatment at a larger hospital. But the burden has become too great to carry alone.
+
+                                Your support can help this young boy access the medical care he deserves and give his mother something she desperately needs—hope.
+
+                                    Join the Heart of God Foundation in helping this family find answers, healing, and a brighter future..</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Story 5 -->
+            <div class="story-slide">
+                <div class="story-grid">
+                    <div class="story-image-side">
+                        <img src="images/story-5.jpg" alt="Relief" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="missing-img-fallback" style="display:none; flex-direction:column; align-items:center;"><i class="fas fa-box-open"></i></div>
+                    </div>
+                    <div class="story-text-side">
+                        <span class="story-tag">Help a Mother of 3 Get a Hip Replacement</span>
+                        <h3>A 38-year-old mother</h3>
+                        <p>A 38-year-old mother has battled arthritis for 10 years, and it has now damaged her hip severely. Doctors at Levy Mwanawasa Hospital have advised hip replacement surgery, but she needs implants worth about K40,000.
+
+                            She is in constant pain and can no longer work as a maid. As a mother of three, she is pleading for support to raise the money for surgery so she can walk again and care for her children.
+
+                                Your help can change her life. Please stand with her today.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Story 6 -->
+            <div class="story-slide">
+                <div class="story-grid">
+                    <div class="story-image-side">
+                        <img src="images/story-6.jpg" alt="Women skills collective" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="missing-img-fallback" style="display:none; flex-direction:column; align-items:center;"><i class="fas fa-female"></i></div>
+                    </div>
+                    <div class="story-text-side">
+                        <span class="story-tag">Empowering Women, Protecting Children</span>
+                        <h3>In many communities</h3>
+                        <p>n many communities, women and children face daily challenges that often go unseen. Mothers struggle to provide food, education, 
+                            healthcare, and a safe environment for their families, while vulnerable children are left at risk of neglect, poverty, and limited opportunities.
+                            At the Heart of God Foundation, we believe that when a woman is empowered, an entire family is strengthened. Through our Women & 
+                                Child Welfare Program, we support struggling mothers with skills training, small business empowerment, educational assistance, healthcare 
+                                    support, and essential household needs. We also work to ensure that children have access to protection, education, nutrition,
+                                    and the care they need to grow into healthy and productive adults.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slider-indicators" id="sliderIndicators"></div>
+</section>
+
+<!-- Restored Five Programs Section -->
+<section id='programs' class="reveal">
+    <h2 class="section-title">Our Programs</h2>
+    <div class='grid'>
+        <!-- Program 1 -->
+        <div class='card program-card'>
+            <div class="program-img-wrapper">
+                <img src="images/program-education.jpg" alt="Education" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="missing-img-fallback" style="display:none; height:100%; align-items:center; justify-content:center;"><i class="fas fa-graduation-cap"></i></div>
+            </div>
+            <div class="program-body">
+                <h3>Education Program</h3>
+                <p>Scholarships, sponsorships, and long-term literacy development initiatives to give children structural educational pathways.</p>
+            </div>
+        </div>
+        <!-- Program 2 -->
+        <div class='card program-card'>
+            <div class="program-img-wrapper">
+                <img src="images/program-health.jpg" alt="Health" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="missing-img-fallback" style="display:none; height:100%; align-items:center; justify-content:center;"><i class="fas fa-heartbeat"></i></div>
+            </div>
+            <div class="program-body">
+                <h3>Health Program</h3>
+                <p>Comprehensive community medical outreach, immediate care diagnostic screening, and localized wellness events.</p>
+            </div>
+        </div>
+        <!-- Program 3 -->
+        <div class='card program-card'>
+            <div class="program-img-wrapper">
+                <img src="images/program-youth.jpg" alt="Youth" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="missing-img-fallback" style="display:none; height:100%; align-items:center; justify-content:center;"><i class="fas fa-seedling"></i></div>
+            </div>
+            <div class="program-body">
+                <h3>Youth Empowerment</h3>
+                <p>Practical vocational craft training paths along with advanced entrepreneurship mentorship modules.</p>
+            </div>
+        </div>
+        <!-- Program 4 -->
+        <div class='card program-card'>
+            <div class="program-img-wrapper">
+                <img src="images/program-women.jpg" alt="Women" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="missing-img-fallback" style="display:none; height:100%; align-items:center; justify-content:center;"><i class="fas fa-female"></i></div>
+            </div>
+            <div class="program-body">
+                <h3>Women & Child Welfare</h3>
+                <p>Dedicated sewing craft academies, micro-finance launching support systems, and protective infant wellness environments.</p>
+            </div>
+        </div>
+        <!-- Program 5 -->
+        <div class='card program-card'>
+            <div class="program-img-wrapper">
+                <img src="images/program-relief.jpg" alt="Relief" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="missing-img-fallback" style="display:none; height:100%; align-items:center; justify-content:center;"><i class="fas fa-box-open"></i></div>
+            </div>
+            <div class="program-body">
+                <h3>Humanitarian Relief</h3>
+                <p>Rapid field action distributing clean winter blankets, fresh food elements, and emergency basic shelter setups.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id='partner' class="reveal">
+    <h2 class="section-title">Why Partner With Us?</h2>
+    <div class='card' style="text-align: center; max-width: 800px; margin: auto; font-size: 1.2rem; line-height: 1.8;">
+        <i class="fas fa-handshake" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+        <p>Heart of Gold Foundation is deeply committed to transparency, operational accountability, and highly sustainable local community impact.</p>
+    </div>
+</section>
+
+<section id='donate' class="reveal">
+    <h2 class="section-title">Support Our Cause</h2>
+    <div class="donate-trigger-wrapper">
+        <button class="btn" id="toggleDonateBtn" onclick="toggleDonationDetails()" style="background:var(--primary); color:#fff; border:none; padding:12px 30px; border-radius:30px; font-weight:600; cursor:pointer;">Donate Now <i class="fas fa-heart" style="margin-left: 8px;"></i></button>
+    </div>
+    <div class="donate-container" id="donationContent">
+        <div class='grid'>
+            <div class='donate-card'>
+                <i class="fas fa-university"></i>
+                <h3>Bank Account Details</h3>
+                <p style="margin-top: 10px; color: #555;">FNB Account Number: 62882727525</p>
+                <p style="margin-top: 10px; color: #555;">Account name: Margret kambikambi </p>
+                <p style="margin-top: 10px; color: #555;">Currency: ZMW</p>
+                <p style="margin-top: 10px; color: #555;">Branch: Acacia Park Branch</p>
+            </div>
+            <div class='donate-card'>
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Mobile Money</h3>
+                <p style="margin-top: 10px; color: #555;">+260976452914 / +26077296449</p>
+                <p style="margin-top: 10px; color: #555;">Margret kambikambi</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id='contact' class="reveal">
+    <h2 class="section-title">Contact Us</h2>
+    <div class="contact-wrapper">
+        <div class="contact-item"><i class="fas fa-phone-alt"></i><p>+260976452914<br>+26077296449</p></div>
+        <div class="contact-item"><i class="fas fa-envelope"></i><p>heartofgodfoundation@gmail.com</p></div>
+        <div class="contact-item"><i class="fas fa-map-marker-alt"></i><p>Zambia</p></div>
+    </div>
+</section>
+
+<footer>
+    <h3>Heart of Gold Foundation</h3>
+    <p>&copy; 2026 Heart of Gold Foundation. All Rights Reserved.</p>
+</footer>
+
+<a class='whatsapp-float' href='https://wa.me/260976452914' target="_blank"><i class='fab fa-whatsapp'></i></a>
+
+<script>
+function toggleMobileMenu() {
+    document.getElementById("nav-menu-container").classList.toggle("active");
+    document.getElementById("mobile-menu-btn").classList.toggle("active");
+}
+function closeMobileMenu() {
+    document.getElementById("nav-menu-container").classList.remove("active");
+    document.getElementById("mobile-menu-btn").classList.remove("active");
+}
+
+let currentStoryIndex = 0;
+const totalStories = 6;
+let autoSlideTimer; 
+
+document.addEventListener("DOMContentLoaded", function() {
+    const indicatorsBox = document.getElementById("sliderIndicators");
+    if(indicatorsBox) {
+        for (let i = 0; i < totalStories; i++) {
+            const dot = document.createElement("div");
+            dot.classList.add("indicator-dot");
+            if(i === 0) dot.classList.add("active");
+            dot.setAttribute("onclick", `goToStorySlide(${i})`);
+            indicatorsBox.appendChild(dot);
+        }
+    }
+    
+    startAutoSlide();
+    
+    const visibleElements = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add("active");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { root: null, threshold: 0.1 });
+    visibleElements.forEach(elem => { observer.observe(elem); });
+});
+
+function startAutoSlide() {
+    clearInterval(autoSlideTimer); 
+    autoSlideTimer = setInterval(() => {
+        moveStoriesSlider(1);
+    }, 3000); 
+}
+
+function updateSliderPosition() {
+    const wrapper = document.getElementById("storiesWrapper");
+    if(wrapper) wrapper.style.transform = `translateX(-${currentStoryIndex * 100}%)`;
+    const dots = document.querySelectorAll(".indicator-dot");
+    dots.forEach((dot, idx) => {
+        if(idx === currentStoryIndex) dot.classList.add("active");
+        else dot.classList.remove("active");
+    });
+}
+
+function moveStoriesSlider(direction) {
+    currentStoryIndex = (currentStoryIndex + direction + totalStories) % totalStories;
+    updateSliderPosition();
+    startAutoSlide(); 
+}
+
+function goToStorySlide(index) {
+    currentStoryIndex = index;
+    updateSliderPosition();
+    startAutoSlide(); 
+}
+
+function toggleDonationDetails() {
+    const targetBox = document.getElementById('donationContent');
+    const actionBtn = document.getElementById('toggleDonateBtn');
+    if(targetBox.classList.contains('open')) {
+        targetBox.classList.remove('open');
+        actionBtn.innerHTML = 'Donate Now <i class="fas fa-heart" style="margin-left: 8px;"></i>';
+    } else {
+        targetBox.classList.add('open');
+        actionBtn.innerHTML = 'Hide Methods <i class="fas fa-times" style="margin-left: 8px;"></i>';
+    }
+}
+
+window.onscroll = function() {
+    const targetHeader = document.getElementById("main-header");
+    if (targetHeader && window.innerWidth > 992) {
+        if (document.body.scrollTop > 40 || document.documentElement.scrollTop > 40) {
+            targetHeader.style.top = "0px";
+            targetHeader.style.background = "rgba(255, 255, 255, 0.95)";
+        } else {
+            targetHeader.style.top = "40px";
+            targetHeader.style.background = "rgba(255, 255, 255, 0.9)";
+        }
+    }
+};
+</script>
+</body>
+</html>
